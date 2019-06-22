@@ -7,9 +7,9 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import ElementNotVisibleException
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import (
+    NoSuchElementException, ElementNotVisibleException, WebDriverException
+)
 
 
 def handler(event, context):
@@ -66,6 +66,9 @@ class Sele:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.driver.close()
         self.driver.quit()
+        if exc_type or exc_val or exc_tb:
+            return str(exc_type, exc_val, exc_tb)
+        return True
 
     def element_govtech_id_name(self):
         """
