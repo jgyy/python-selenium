@@ -76,6 +76,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg"
         self.driver.get(base_url)
+        body = ""
         try:
             self.driver.find_element_by_id("navbar")
             print("We found an element by id='navbar'")
@@ -84,11 +85,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
     def element_govtech_xpath_css(self):
@@ -97,6 +98,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg/digital-government-transformation/"
         self.driver.get(base_url)
+        body = ""
         try:
             self.driver.find_element_by_xpath("//input[@id='search-box-mobile']")
             print("We found an element by xpath='//input[@id='search-box-mobile']'")
@@ -105,11 +107,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
     def element_govtech_link_text(self):
@@ -118,6 +120,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg/who-we-are/our-role/"
         self.driver.get(base_url)
+        body = ""
         try:
             self.driver.find_element_by_link_text("A Singapore Government Agency Website")
             print("We found an element by link_text='A Singapore Government Agency Website'")
@@ -126,11 +129,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
     def element_govtech_class_tag(self):
@@ -139,6 +142,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg/careers/overview/"
         self.driver.get(base_url)
+        body = ""
         try:
             self.driver.find_element_by_class_name("navbar-burger").click()
             key = self.driver.find_element_by_class_name("input")
@@ -149,11 +153,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
     def element_govtech_by_class(self):
@@ -162,6 +166,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg/media/"
         self.driver.get(base_url)
+        body = ""
         try:
             # noinspection PyArgumentEqualDefault
             self.driver.find_element(By.ID, "2008")
@@ -173,11 +178,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
     def govtech_list_of_elements(self):
@@ -186,6 +191,7 @@ class Sele:
         """
         base_url = "https://www.tech.gov.sg/contact-us/"
         self.driver.get(base_url)
+        body = ""
         try:
             class_list = self.driver.find_elements_by_class_name("row")
             print("ClassName -> Size of the list is: " + str(len(class_list)))
@@ -194,11 +200,11 @@ class Sele:
             body = self.driver.find_element_by_xpath("//div[@id='main-content']").text
             print(body)
         except NoSuchElementException:
-            raise NoSuchElementException
+            print(NoSuchElementException)
         except ElementNotVisibleException:
-            raise ElementNotVisibleException
+            print(ElementNotVisibleException)
         except WebDriverException:
-            raise WebDriverException
+            print(WebDriverException)
         return body
 
 
