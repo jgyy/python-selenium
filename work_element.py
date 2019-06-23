@@ -72,7 +72,6 @@ class Sele:
         base_url = "https://www.epicgames.com/fortnite/en-US/battle-pass/season-9"
         self.driver.maximize_window()
         self.driver.get(base_url)
-        body = ""
         try:
             title = self.driver.title
             print("Title of the webpage is: " + title)
@@ -109,7 +108,6 @@ class Sele:
         base_url = "https://www.epicgames.com/store/en-US/"
         self.driver.maximize_window()
         self.driver.get(base_url)
-        body = ""
         try:
             self.driver.find_element(By.XPATH, "//a[contains(@title,'Sign In')]").click()
             self.driver.find_element(
