@@ -26,7 +26,8 @@ def handler(event, context):
                 "browser interation": sele.steam_browser_interactions(),
                 "click send": sele.steam_click_keys(),
                 "element state": sele.steam_element_state(),
-                "radio checkbox": sele.steam_radio_checkbox()
+                "radio checkbox": sele.steam_radio_checkbox(),
+                "element list": sele.steam_element_list()
             }
             obj = json.dumps(obj)
         except KeyboardInterrupt:
@@ -174,21 +175,57 @@ class Sele:
         self.driver.get(base_url)
         self.driver.implicitly_wait(1)
         try:
-            tags = self.driver.find_elements(By.XPATH, "//div[@id='TagFilter_Container']//div")
+            tags = self.driver.find_elements(By.XPATH, "//div[@id='narrow_category1']//div")
             print("tags: " + str(len(tags)))
-            tag_suggest = self.driver.find_elements(By.XPATH, "//input[@id='TagSuggest']")
+            tag_see_all = self.driver.find_element(
+                By.XPATH, "//div[@id='additional_search_options']//div[2]//a[1]")
+            self.driver.implicitly_wait(1)
+            tag_see_all.click()
+            for tag in tags:
+                if tag.is_enabled() and tag.is_displayed():
+                    self.driver.implicitly_wait(1)
+                    tag.click()
+                    self.driver.implicitly_wait(1)
+                    body = self.driver.find_element(
+                        By.XPATH, "//div[@id='search_results']").get_attribute("innerText")
+                    print(body)
+                    if tag.is_selected():
+                        tag.click()
+
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        except WebDriverException:
+            self.driver.close()
+            self.driver.quit()
+            raise WebDriverException
+        return body
+
+    def steam_element_list(self):
+        """
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/search"
+        self.driver.maximize_window()
+        self.driver.get(base_url)
+        self.driver.implicitly_wait(1)
+        try:
+            tags = self.driver.find_elements(
+                By.XPATH,
+                "//div[contains(text(),'Narrow by number of "
+                "players')]/../following-sibling::div//div")
+            print("tags: " + str(len(tags)))
             self.driver.implicitly_wait(1)
             for tag in tags:
-                tag_suggest.clear()
-                kets = str(tag.get_attribute("innerText").strip())
-                print(tag)
-                print("kets+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                if kets:
-                    print("'{}'".format(kets))
-                    tag_suggest.send_keys(kets)
-                    self.driver.implicitly_wait(9)
+                if tag.is_enabled() and tag.is_displayed():
+                    self.driver.implicitly_wait(1)
                     tag.click()
-                    tag.click()
+                    self.driver.implicitly_wait(1)
+                    body = self.driver.find_element(
+                        By.XPATH, "//div[@id='search_results']").get_attribute("innerText")
+                    print(body)
+                    if tag.is_selected():
+                        tag.click()
 
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
