@@ -15,7 +15,6 @@ from env import (USERNAME, PASSWORD)
 
 def handler(event, context):
     """
-    blue development server ip: 13.250.110.171
     :param event: aws event
     :param context: aws context
     :return: json status code and body
