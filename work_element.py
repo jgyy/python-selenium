@@ -8,6 +8,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException
 from env import (USERNAME, PASSWORD)
 
@@ -27,7 +28,9 @@ def handler(event, context):
                 "click send": sele.steam_click_keys(),
                 "element state": sele.steam_element_state(),
                 "radio checkbox": sele.steam_radio_checkbox(),
-                "element list": sele.steam_element_list()
+                "element list": sele.steam_element_list(),
+                "dropdown element": sele.steam_dropdown_element(),
+                "hidden element": sele.steam_hidden_elements()
             }
             obj = json.dumps(obj)
         except KeyboardInterrupt:
@@ -80,24 +83,21 @@ class Sele:
         try:
             title = self.driver.title
             print("Title of the webpage is: " + title)
-            current_url = self.driver.current_url
-            print("Current Url of the web page is: " + current_url)
+            print("Current Url of the web page is: " + self.driver.current_url)
             self.driver.refresh()
             print("Browser Refreshed 1st time")
             self.driver.get(self.driver.current_url)
+            print("Current Url of the web page is: " + self.driver.current_url)
             print("Browser Refreshed 2nd time")
             self.driver.get("https://steamcommunity.com/")
-            current_url = self.driver.current_url
-            print("Current Url of the web page is: " + current_url)
+            print("Current Url of the web page is: " + self.driver.current_url)
             self.driver.back()
             print("Go one step back in browser history")
-            current_url = self.driver.current_url
-            print("Current Url of the web page is: " + current_url)
+            print("Current Url of the web page is: " + self.driver.current_url)
             self.driver.forward()
             print("Go one step forward in browser history")
-            current_url = self.driver.current_url
             self.driver.back()
-            print("Current Url of the web page is: " + current_url)
+            print("Current Url of the web page is: " + self.driver.current_url)
 
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
@@ -226,6 +226,54 @@ class Sele:
                     print(body)
                     if tag.is_selected():
                         tag.click()
+
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        except WebDriverException:
+            self.driver.close()
+            self.driver.quit()
+            raise WebDriverException
+        return body
+
+    def steam_dropdown_element(self):
+        """
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/search"
+        self.driver.maximize_window()
+        self.driver.get(base_url)
+        self.driver.implicitly_wait(1)
+        try:
+            action = ActionChains(self.driver)
+            first_menu = self.driver.find_element(By.XPATH, "//a[contains(text(),'STORE')]")
+            action.move_to_element(first_menu).perform()
+            second_menu = self.driver.find_element(
+                By.XPATH, "//div[@class='supernav_content']//a[contains(text(),'Stats')]")
+            second_menu.click()
+
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        except WebDriverException:
+            self.driver.close()
+            self.driver.quit()
+            raise WebDriverException
+        return body
+
+    def steam_hidden_elements(self):
+        """
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/search"
+        self.driver.maximize_window()
+        self.driver.get(base_url)
+        self.driver.implicitly_wait(1)
+        try:
+            eles = self.driver.find_elements(By.XPATH, "//html//*[string-length(text())>0]")
+            for ele in eles:
+                if ele.is_displayed():
+                    print(ele.get_attribute("innerText"))
 
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
