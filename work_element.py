@@ -127,7 +127,6 @@ class Sele:
                 By.XPATH, "//button//span[contains(text(), 'Sign in')]"
             ).click()
             self.driver.implicitly_wait(2)
-            self.driver.find_element(By.XPATH, "//div[@class='home_cluster_ctn home_ctn']")
             self.driver.find_element(By.XPATH, "//span[@id='account_pulldown']").click()
             self.driver.find_element(
                 By.XPATH, "//a[@class='popup_menu_item'][contains(text(),'Account details')]"

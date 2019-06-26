@@ -19,7 +19,8 @@ def handler(event, context):
     with Sele(event) as sele:
         try:
             obj = {
-                "get text": sele.steam_get_text()
+                "get text": sele.steam_get_text(),
+                "get value": sele.steam_get_value()
             }
             obj = json.dumps(obj)
         except KeyboardInterrupt:
@@ -65,21 +66,77 @@ class Sele:
         """
         :return: search result from steam website
         """
+        base_url = "https://store.steampowered.com/search"
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(1)
+        self.driver.get(base_url)
+        try:
+            for num in list(range(1, 8)):
+                self.driver.implicitly_wait(4)
+                self.driver.find_element(
+                    By.XPATH, "//a[contains(text(),'>')]"
+                ).click()
+                self.driver.implicitly_wait(4)
+                page = self.driver.find_element(
+                    By.XPATH,
+                    "//div[@class='search_pagination_left'][contains(text(), '{}')]".format(
+                        str(num*25)
+                    )
+                ).get_attribute("innerText")
+                self.driver.implicitly_wait(2)
+                open_tab = self.driver.find_element(
+                    By.XPATH, "//div[@id='search_results']"
+                ).get_attribute("innerText")
+                print(open_tab, page)
+
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        except KeyboardInterrupt:
+            self.driver.close()
+            self.driver.quit()
+            raise KeyboardInterrupt
+        return body
+
+    def steam_get_value(self):
+        """
+        :return: search result from steam website
+        """
         base_url = "https://store.steampowered.com/"
         self.driver.maximize_window()
         self.driver.implicitly_wait(1)
         self.driver.get(base_url)
         try:
-            for _ in list(range(0, 10)):
-                self.driver.find_element(
-                    By.XPATH, "//div[@id='home_maincap_v7']//div[@class='arrow right']"
-                ).click()
-                self.driver.implicitly_wait(1)
-                open_tab = self.driver.find_element(
-                    By.XPATH, "//div[@class='home_cluster_ctn home_ctn']"
-                ).get_attribute("innerText")
-                self.driver.implicitly_wait(1)
-                print(open_tab)
+            types = self.driver.find_elements(
+                By.XPATH, "//*[@type]"
+            )
+            for html_type in types:
+                print(html_type.get_attribute("type"))
+
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        except WebDriverException:
+            self.driver.close()
+            self.driver.quit()
+            raise WebDriverException
+        return body
+
+    def steam_wrapper_method(self):
+        """
+        # TODO not yet finish
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/"
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(1)
+        self.driver.get(base_url)
+        try:
+            types = self.driver.find_elements(
+                By.XPATH, "//*[@type]"
+            )
+            for html_type in types:
+                print(html_type.get_attribute("type"))
 
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
