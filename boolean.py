@@ -1,19 +1,20 @@
 """
-Examples to show how boolean works in python
+== --> Value Equality
+!= --> Not equal to
+< --> Less than
+> --> Greater than
+<= --> Less than or equal to
+>= --> Greater than or equal to
 """
 
-A = True
-B = False
+BOOL_ONE = 10 == 11
+NOT_EQUAL = 10 != 11
+LESS_THAN = 10 < 11
+GREATER_THAN = 10 > 9
+LT_EQ = 10 <= 9
+print(BOOL_ONE, NOT_EQUAL, LESS_THAN, GREATER_THAN, LT_EQ)
 
-print(A, B)
-
-print("**************************")
-print(bool(0))
-print(bool(1))
-print(bool(2))
-
-C = ""
-print(bool(C))
-
-C = "Some Value"
-print(bool(C))
+BOOL_OUTPUT = True or not False and False
+# noinspection Pylint
+# BOOL_OUTPUT_1 = (10 == 10 or not 10 > 10) and 10 > 10
+print(BOOL_OUTPUT)
