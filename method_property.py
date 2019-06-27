@@ -3,10 +3,11 @@ Selenium Web Driver. Useful methods and properties
 """
 import json
 import time
+import string
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, NoSuchElementException
 
 
 def handler(event, context):
@@ -20,7 +21,10 @@ def handler(event, context):
         try:
             obj = {
                 "get text": sele.steam_get_text(),
-                "get value": sele.steam_get_value()
+                "get value": sele.steam_get_value(),
+                "wrapper method": sele.steam_wrapper_method(),
+                "element presense": sele.steam_element_presense(),
+                "dynamic xpath": sele.steam_dynamic_xpath()
             }
             obj = json.dumps(obj)
         except KeyboardInterrupt:
@@ -88,14 +92,13 @@ class Sele:
                     By.XPATH, "//div[@id='search_results']"
                 ).get_attribute("innerText")
                 print(open_tab, page)
-
+        except WebDriverException:
+            self.driver.quit()
+            raise WebDriverException
+        finally:
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
             print(body)
-        except KeyboardInterrupt:
-            self.driver.close()
-            self.driver.quit()
-            raise KeyboardInterrupt
         return body
 
     def steam_get_value(self):
@@ -112,19 +115,17 @@ class Sele:
             )
             for html_type in types:
                 print(html_type.get_attribute("type"))
-
+        except WebDriverException:
+            self.driver.quit()
+            raise WebDriverException
+        finally:
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
             print(body)
-        except WebDriverException:
-            self.driver.close()
-            self.driver.quit()
-            raise WebDriverException
         return body
 
     def steam_wrapper_method(self):
         """
-        # TODO not yet finish
         :return: search result from steam website
         """
         base_url = "https://store.steampowered.com/"
@@ -132,19 +133,74 @@ class Sele:
         self.driver.implicitly_wait(1)
         self.driver.get(base_url)
         try:
-            types = self.driver.find_elements(
-                By.XPATH, "//*[@type]"
-            )
+            self.driver.implicitly_wait(1)
+            types = self.driver.find_elements(By.XPATH, "//*[@type]")
             for html_type in types:
                 print(html_type.get_attribute("type"))
-
+            self.driver.implicitly_wait(1)
+            ids = self.driver.find_elements(By.XPATH, "//*[@id]")
+            for html_id in ids:
+                print(html_id.get_attribute("id"))
+        except WebDriverException:
+            self.driver.quit()
+            raise WebDriverException
+        finally:
             self.driver.implicitly_wait(1)
             body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
             print(body)
+        return body
+
+    def steam_element_presense(self):
+        """
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/"
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(1)
+        self.driver.get(base_url)
+        try:
+            for one_char in string.ascii_lowercase:
+                self.driver.implicitly_wait(1)
+                text = self.driver.find_elements(
+                    By.XPATH, "//*[contains(text(), '{}')]".format(one_char))
+                for html_text in text:
+                    print(html_text.get_attribute("innerText"))
+        except NoSuchElementException:
+            print("No more element presense.")
+            self.driver.quit()
+        finally:
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
+        return body
+
+    def steam_dynamic_xpath(self):
+        """
+        :return: search result from steam website
+        """
+        base_url = "https://store.steampowered.com/search"
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(1)
+        self.driver.get(base_url)
+        try:
+            for one_char in string.ascii_lowercase:
+                self.driver.implicitly_wait(1)
+                search = self.driver.find_element(By.XPATH, "//input[@id='store_nav_search_term']")
+                search.clear()
+                search.send_keys(one_char)
+                self.driver.implicitly_wait(1)
+                self.driver.find_element(By.XPATH, "//a[contains(text(),'2')]").click()
+                self.driver.implicitly_wait(1)
+                result = self.driver.find_element(
+                    By.XPATH, "//div[@id='search_results']").get_attribute("innerText")
+                print(result)
         except WebDriverException:
-            self.driver.close()
             self.driver.quit()
             raise WebDriverException
+        finally:
+            self.driver.implicitly_wait(1)
+            body = self.driver.find_element(By.XPATH, "//body").get_attribute("innerText")
+            print(body)
         return body
 
 
