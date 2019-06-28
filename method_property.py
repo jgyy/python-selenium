@@ -12,6 +12,7 @@ from selenium.common.exceptions import WebDriverException, NoSuchElementExceptio
 
 def handler(event, context):
     """
+    This is the default aws lambda handler
     :param event: aws event
     :param context: aws context
     :return: json status code and body
